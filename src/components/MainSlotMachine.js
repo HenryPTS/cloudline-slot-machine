@@ -10,15 +10,17 @@ const Parent = styled.div`
   width: 100%;
   background: #dcdcf3;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
 `;
 
 const SubDiv = styled.div`
-  height: 80%;
+  height: 50%;
   width: 40%;
   margin: 20px;
   padding: 30px;
+  border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,8 +28,13 @@ const SubDiv = styled.div`
   background: #e09e9e;
 `;
 
+const SubDivLower = styled(SubDiv)`
+  height: auto;
+`
+
 const Header = styled.div`
   height: 60px;
+  border-radius: 4px;
   width: 100%;
   background: #cc6d6d;
   display: flex;
@@ -46,6 +53,7 @@ const Slot = styled.div`
   height: 250px;
   width: 180px;
   border: 2px solid black;
+  transition: background-color 200ms;
 `;
 
 const Spin = styled.button`
@@ -57,10 +65,17 @@ const Spin = styled.button`
   font-size: 25px;
   font-weight: bold;
   background: blue;
+  border-radius: 4px;
   color: white;
   user-select: none;
   :hover {
     cursor: pointer;
+  }
+  &:disabled {
+    color: #c5c4c4;
+    background-color: #a8a8f7d4;
+    cursor: not-allowed;
+    border: none;
   }
 `;
 
@@ -71,60 +86,55 @@ const Tally = styled.div`
   font-size: 20px;
 `;
 
+const baseColors = ["red", "blue", "yellow", "green", "orange"];
+const defaultColors = ["grey", "grey", "grey"]
+
 const MainSlotMachine = () => {
-  // The dispatch function for dispatching actions when we
-  // call our action creators.
   const dispatch = useDispatch();
-
-  // Getting our main tally data from redux state.
   const tally = useSelector(state => state.tally);
+  
+  const [newColors, setColors] = useState(defaultColors);
 
-  // A few random base colors. To worsen the odds of winning,
-  // you can add more colors.
-  const baseColors = ["red", "blue", "yellow"];
+  function spin() {
+    const randomColors = [
+      baseColors[Math.round(Math.random() * 4)],
+      baseColors[Math.round(Math.random() * 4)],
+      baseColors[Math.round(Math.random() * 4)]
+    ]
+    setColors(randomColors)
+    dispatch(addToTries())
+    if (randomColors[0] === randomColors[1] && randomColors[1]  === randomColors[2]) {
+      dispatch(addToWins())
+    }
+  }
 
-  // By default, the slot machine colors are all grey. You can change
-  // this if you want.
-  const [newColors, setColors] = useState(["grey", "grey", "grey"]);
-
-  // TASK
-  // Here is the main spin function which should be called
-  // every time we press the Spin button. This function should:
-
-  // 1. Add to our tally tries in the redux state. (i.e dispatch(addToTries()))
-
-  // 2. Randomly select a color 3 times from our base colors, and
-  // set them in our local state above, newColors.
-
-  // 3. If all the colors are the same, we add to our tally wins.
-  function spin() {}
-
-  // TASK
-  // In this lifecycle function, of the tally wins reaches 5,
-  // have a window.confirm message come up telling the user to 'Stop Gambling!'.
-  // on 5 wins the spin button should also become disabled.
-  // On selecting 'ok', the tally wins and tries are reset.
-  useEffect(() => {}, []);
-
-  // TASK
-  // Within the Slots div, create 3 slots. (Create a styled component called 'Slot'
-  // and render it out 3 times). Their background colors should be those stored
-  // in the newColors array. (Use inline styling)
+  useEffect(() => {
+    if (tally.wins === 5) {
+      const reset = window.confirm('Stop gambling!')
+      if (reset) {
+        dispatch(resetTally())
+        setColors(defaultColors)
+      }
+    }
+  }, [tally.wins, dispatch, setColors]);
 
   return (
     <Parent>
       <SubDiv>
-        <Slots></Slots>
-
-        <Spin>Spin!</Spin>
+        <Slots>
+          <Slot style={{ backgroundColor: newColors[0] }} />
+          <Slot style={{ backgroundColor: newColors[1] }} />
+          <Slot style={{ backgroundColor: newColors[2] }} />
+        </Slots>
+        <Spin onClick={spin} disabled={tally.wins === 5}>Spin!</Spin>
       </SubDiv>
-      <SubDiv>
+      <SubDivLower>
         <Header>Tally</Header>
         <Tally>
           <Tries />
           <Wins />
         </Tally>
-      </SubDiv>
+      </SubDivLower>
     </Parent>
   );
 };

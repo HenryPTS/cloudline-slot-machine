@@ -1,12 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-// TASK
-// Display the number of tries, i.e 'You've tried x times'
-
 function Tries() {
-  const tally = useSelector(state => state.tally);
-  return "tries";
+  const tries = useSelector(state => state.tally.tries);
+  return <h3 style={{ color: '#fff6f8' }}>{`${tries} tries`}</h3>;
 }
 
 export default Tries;
