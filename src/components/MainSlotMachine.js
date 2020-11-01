@@ -27,6 +27,7 @@ const SubDiv = styled.div`
   align-items: center;
   flex-direction: column;
   background: #FFFFFF;
+  min-width: 400px;
 `;
 
 const SubDivLower = styled(SubDiv)`
