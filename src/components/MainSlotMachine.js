@@ -100,9 +100,9 @@ const MainSlotMachine = () => {
 
   function spin() {
     const randomColors = [
-      baseColors[Math.round(Math.random() * (baseColors.length - 1))],
-      baseColors[Math.round(Math.random() * (baseColors.length - 1))],
-      baseColors[Math.round(Math.random() * (baseColors.length - 1))]
+      baseColors[Math.floor(Math.random() * (baseColors.length))],
+      baseColors[Math.floor(Math.random() * (baseColors.length))],
+      baseColors[Math.floor(Math.random() * (baseColors.length))]
     ];
     setColors(randomColors);
     dispatch(addToTries());
