@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 function Tries() {
   const tries = useSelector(state => state.tally.tries);
-  return <h3 style={{ color: '#fff6f8' }}>{`${tries} tries`}</h3>;
+  return <h3 style={{ color: '#cc6d6d' }}>{`${tries} tries`}</h3>;
 }
 
 export default Tries;

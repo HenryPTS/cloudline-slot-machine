@@ -8,7 +8,7 @@ import Wins from "./Wins";
 const Parent = styled.div`
   height: 100%;
   width: 100%;
-  background: #dcdcf3;
+  background: #F1F1F1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,12 +20,13 @@ const SubDiv = styled.div`
   width: 40%;
   margin: 20px;
   padding: 30px;
+  border: 2px solid black;
   border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  background: #e09e9e;
+  background: #FFFFFF;
 `;
 
 const SubDivLower = styled(SubDiv)`
@@ -46,14 +47,15 @@ const Header = styled.div`
 
 const Slots = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  width: 100%;
 `;
 
 const Slot = styled.div`
   height: 250px;
-  width: 180px;
+  width: 33.33%;
+  max-width: 180px;
   border: 2px solid black;
-  transition: background-color 200ms;
 `;
 
 const Spin = styled.button`
@@ -68,12 +70,12 @@ const Spin = styled.button`
   border-radius: 4px;
   color: white;
   user-select: none;
+  background-color: #cc6d6d;
   :hover {
     cursor: pointer;
   }
   &:disabled {
-    color: #c5c4c4;
-    background-color: #a8a8f7d4;
+    opacity: 0.5;
     cursor: not-allowed;
     border: none;
   }
@@ -86,8 +88,8 @@ const Tally = styled.div`
   font-size: 20px;
 `;
 
-const baseColors = ["red", "blue", "yellow", "green", "orange"];
-const defaultColors = ["grey", "grey", "grey"]
+const baseColors = ["red", "blue", "yellow"];
+const defaultColors = ["grey", "grey", "grey"];
 
 const MainSlotMachine = () => {
   const dispatch = useDispatch();
@@ -97,23 +99,23 @@ const MainSlotMachine = () => {
 
   function spin() {
     const randomColors = [
-      baseColors[Math.round(Math.random() * 4)],
-      baseColors[Math.round(Math.random() * 4)],
-      baseColors[Math.round(Math.random() * 4)]
-    ]
-    setColors(randomColors)
-    dispatch(addToTries())
+      baseColors[Math.round(Math.random() * (baseColors.length - 1))],
+      baseColors[Math.round(Math.random() * (baseColors.length - 1))],
+      baseColors[Math.round(Math.random() * (baseColors.length - 1))]
+    ];
+    setColors(randomColors);
+    dispatch(addToTries());
     if (randomColors[0] === randomColors[1] && randomColors[1]  === randomColors[2]) {
-      dispatch(addToWins())
+      dispatch(addToWins());
     }
   }
 
   useEffect(() => {
     if (tally.wins === 5) {
-      const reset = window.confirm('Stop gambling!')
+      const reset = window.confirm('Stop gambling!');
       if (reset) {
-        dispatch(resetTally())
-        setColors(defaultColors)
+        dispatch(resetTally());
+        setColors(defaultColors);
       }
     }
   }, [tally.wins, dispatch, setColors]);
